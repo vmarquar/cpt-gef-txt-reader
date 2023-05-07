@@ -100,4 +100,8 @@ excel_outpath = './CPT_Summary.xlsx'
 with pd.ExcelWriter(excel_outpath) as writer:
     header_df.to_excel(writer, sheet_name="Sheet0_cpt_header_info", index=False)
     measurements_df.to_excel(writer, sheet_name="Sheet1_cpt_measurements", index=False)
+
+# optionally export the data into two csv files that can be imported into Leapfrog Works
+header_df.to_csv('collar.csv')
+measurements_df.to_csv('intervals.csv')
 ```
