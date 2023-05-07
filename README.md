@@ -1,6 +1,6 @@
 # CPT-Parser (.gef.txt Files)
 A simple pure-python implementation to parse .gef.txt files / CPT measurement data in ASCII format.
-Cone penetration tests (CPT) are a very common way of characterising the ground.
+Cone penetration tests (CPT) are a very common way of doing ground surveys.
 
 The file format .gef.txt is based on the geotechnical exchange format (GEF) defintions and is very common to represent CPT test data. This repo shows a simple and efficient way of importing this data to a python dictionary/array. This array can easily imported as pandas Dataframe or plotted.
 
