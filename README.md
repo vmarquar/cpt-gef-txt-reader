@@ -1,14 +1,14 @@
 # CPT-Parser (.gef.txt Files)
 A simple pure-python implementation to parse .gef.txt files / CPT measurement data.
-The file format .gef.txt is based on the geotechnical exchange format (GEF) defintions and is very common to represent CPT Test data. This repo shows a simple and efficient way of importing this data to a python dictionary/array. This array can easily imported as pandas Dataframe or plotted.
+The file format .gef.txt is based on the geotechnical exchange format (GEF) defintions and is very common to represent CPT test data. This repo shows a simple and efficient way of importing this data to a python dictionary/array. This array can easily imported as pandas Dataframe or plotted.
 
 
-# 1) Usage / Installation
+## 1) Usage / Installation
 1. Copy the `gef_parser.py` file to your project
 2. Inside your python project import the parser function: `from gef_parser import read_gef_file`
 3. No dependencies or additional installs are needed to parse .gef.txt files
 
-# 2) File Structure of a .gef.txt file
+## 2) File Structure of a .gef.txt file
 
 Header Information and beginning of the measurements of the CPT Test:
 ```
@@ -38,10 +38,10 @@ Tiefe     qc        fs        u2        I         Rf        ic        Su_min    
 
 
 
-# 3) Examples to parse .gef.txt files
+## 3) Examples to parse .gef.txt files
 > All code examples are located in `./example_usage.py` as well.
 
-## Example 1: Parse a single file
+### Example 1: Parse a single file
 ```python
 from gef_parser import read_gef_file
 # Example 1: Parse a single file
@@ -53,7 +53,7 @@ print(cpt_header)
 print(measurement_columns_and_units)
 ```
 
-## Example 2: Parse a single file, create a pandas dataframe from the measurements and create a plot
+### Example 2: Parse a single file, create a pandas dataframe from the measurements and create a plot
 ```python
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -72,7 +72,7 @@ plt.ylabel("Depth [m]")
 plt.show()
 ```
 
-## Example 3: Read all .gef.txt files in a folder and create a big pandas df of the measurement data
+### Example 3: Read all .gef.txt files in a folder and create a big pandas df of the measurement data
 ```python
 from glob import glob
 folder_path = './GEF_SAMPLES/**/*.GEF.txt'
