@@ -1,0 +1,5 @@
+*.xlsx
+*.pdf
+GEF_SAMPLES
+__pycache__
+.DS_Store
