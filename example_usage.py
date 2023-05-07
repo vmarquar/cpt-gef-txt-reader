@@ -16,20 +16,21 @@ if __name__ == '__main__':
 
 
     # Example 2: Parse a single file and create a pandas dataframe from the measurements
-    # import pandas as pd
-    # file_path = './sample_cptu_file.GEF.txt'
-    # cpt_header, measurement_columns_and_units, measurements = read_gef_file(file_path)
+    import pandas as pd
+    import matplotlib.pyplot as plt
+
+    file_path = './sample_cptu_file.GEF.txt'
+    cpt_header, measurement_columns_and_units, measurements = read_gef_file(file_path)
 
     # ## Create a pandas df from it and plot qc vs. depth
-    # df = pd.DataFrame.from_dict(measurements)
+    df = pd.DataFrame.from_dict(measurements)
     
     # ## Data can easily be plotted
-    # import matplotlib.pyplot as plt
-    # plt.plot(df['qc'], df['Tiefe'])
-    # plt.gca().invert_yaxis()
-    # plt.xlabel("qc [MPa]")
-    # plt.ylabel("Depth [m]")
-    # plt.show()
+    plt.plot(df['qc'], df['Tiefe'])
+    plt.gca().invert_yaxis()
+    plt.xlabel("qc [MPa]")
+    plt.ylabel("Depth [m]")
+    plt.show()
 
 
 
