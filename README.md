@@ -55,7 +55,8 @@ print(cpt_header)
 print(measurement_columns_and_units)
 ```
 
-### Example 2: Parse a single file, create a pandas dataframe from the measurements and create a plot
+### Example 2: Create a pandas Dataframe from a single file
+Parse a single file, create a pandas dataframe from the measurements and create a plot
 ```python
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -74,8 +75,11 @@ plt.ylabel("Depth [m]")
 plt.show()
 ```
 
-### Example 3: Read all .gef.txt files in a folder and create a big pandas df of the measurement data
+### Example 3: Read multiple .gef.txt files in a folder
+
+This example code parses all .gef.txt files in a folder and subfolders. Then it creates a big pandas data-frame of the measurement data and associated cpt header data. Finally it exports the data into a single Excel file. The two tables can easily imported into Leapfrog works for geological modelling.
 ```python
+# Parse all *.gef.txt files in the GEF_SAMPLES folder
 from glob import glob
 folder_path = './GEF_SAMPLES/**/*.GEF.txt'
 all_measurements = []
