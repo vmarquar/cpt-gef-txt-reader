@@ -1,5 +1,5 @@
 from gef_parser import read_gef_file
-from utils.pytess_main import pytess_triangulate, pytess_voronoi
+from utils.pytess_main import pytess_triangulate, pytess_voronoi # original code from pytess, see https://github.com/karimbahgat/Pytess
 
 if __name__ == '__main__':
     
