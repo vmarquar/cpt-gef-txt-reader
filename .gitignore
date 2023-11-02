@@ -3,3 +3,4 @@
 GEF_SAMPLES
 __pycache__
 .DS_Store
+example_data/*

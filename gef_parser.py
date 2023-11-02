@@ -15,6 +15,28 @@ def read_txt_file(file_path):
         except UnicodeDecodeError:
             print(f'got unicode error with {enc} , trying different encoding')
 
+def read_byte_file(io_bytes):
+    """This helper functions reads the file content from a ioBytes files, that comes from e.g. a fastapi endpoint.
+
+    Args:
+        io_bytes (ioBytes): the uploaded file
+    """
+    # 1) check encoding
+    encoding = None
+    for enc in ['windows-1252','utf-8', 'windows-1250']:
+        try:
+            text_content_str = io_bytes.decode(enc)
+            encoding = enc
+            if ('\r\n' in text_content_str):
+                lines = text_content_str.split('\r\n')
+                return(lines,encoding)
+            else:
+                lines = text_content_str.split('\n')
+                return(lines,encoding)
+
+        except UnicodeDecodeError:
+            print(f'got unicode error with {enc} , trying different encoding')
+
 def extract_header_part(lines):
     header = {}
     for index, line in enumerate(lines):
@@ -106,7 +128,7 @@ def read_measurement_headers(lines, skip_lines=0):
     [_header_units.update({h:'[-]'}) for h in _header if _header_units.get(h) == None] # caution: will update the dict inplace!
     return(_header, _header_units, _measurements)
 
-def read_gef_file(file_path : str, header_mapping_dict={}):
+def read_gef_file(file_path : str = None,  file_bytes : bytes = None, header_mapping_dict={}):
     """
     This function reads a .gef.txt file, checks encoding and maps it do a default column schema.
     It returns a list of dictionary values for each data row, that can easily imported into pandas/numpy.
@@ -127,12 +149,17 @@ def read_gef_file(file_path : str, header_mapping_dict={}):
         A dictionary containing all the header information about the cpt,
         e.g. X/Y Coordinates and hole_id.
         >> the naming convention can be overwritten by providing the header_mapping_dict param.
+    header_units: 
+        the units of the header
     measurements: [{},{},...]
         An array of dictionaries of all cpt measurements, e.g. qc, fs, etc.
         one dictionary for one data row (usually 1cm in depth).
 
     """
-    txt_lines, encoding = read_txt_file(file_path)
+    if(file_path is not None):
+        txt_lines, encoding = read_txt_file(file_path)
+    elif(file_bytes is not None):
+        txt_lines, encoding = read_byte_file(file_bytes)
     cpt_header_data = extract_header_part(txt_lines)
     cpt_renamed_header = map_to_default_header_names(cpt_header_data, additional_mapping_dict=header_mapping_dict)
     column_names, header_units, measurements = read_measurement_headers(txt_lines, skip_lines=len(cpt_renamed_header))
