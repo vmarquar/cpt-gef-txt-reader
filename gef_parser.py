@@ -1,5 +1,5 @@
 """
-Author: V. Marquart
+Author: V. Marquart 
 Creation date: 07.05.2023
 License: MIT
 """
@@ -37,14 +37,14 @@ def read_byte_file(io_bytes):
         except UnicodeDecodeError:
             print(f'got unicode error with {enc} , trying different encoding')
 
-def extract_header_part(lines):
+def extract_header_part(lines, header_sep = ':'):
     header = {}
     for index, line in enumerate(lines):
-        if(':' in line):
+        if(header_sep in line):
             # all header lines contain a colon, e.g.
             # Projekt-Nummer: 20211234-123456
             # Projektname: Testprojekt ABC
-            key, value = line.split(':', maxsplit=1)
+            key, value = line.split(header_sep, maxsplit=1)
             key = key.rstrip().strip()
             value = value.rstrip().strip()
             try:
@@ -57,6 +57,53 @@ def extract_header_part(lines):
             # leave the loop after a maximum of 50 parameters/header lines
             break
     return(header)
+
+def extract_alternative_header_part(lines):
+    data_dict = {}
+       
+    for line in lines:
+        if line.startswith('#'):
+            # Remove the leading '#' and split the line by '='
+            key, value = line.lstrip('#').split('=', 1)
+            key = key.strip()
+            value = value.strip()
+            
+            # Handle nested keys for repeated keys like COLUMNVOID, COLUMNINFO, etc.
+            if key in data_dict:
+                if isinstance(data_dict[key], list):
+                    data_dict[key].append(value)
+                else:
+                    data_dict[key] = [data_dict[key], value]
+            else:
+                data_dict[key] = value
+    
+    # Further split values for each key where appropriate
+    for key, value in data_dict.items():
+        if isinstance(value, list):
+            data_dict[key] = [parse_value(val) for val in value]
+        else:
+            data_dict[key] = parse_value(value)
+    
+    # Count header lines:
+    header_lines = sum(1 for line in lines if line.startswith('#'))
+
+    return data_dict, header_lines
+
+def parse_value(value):
+    parts = value.split(',')
+    if len(parts) > 1:
+        return [convert_to_number(part.strip()) for part in parts]
+    else:
+        return convert_to_number(value.strip())
+
+def convert_to_number(s):
+    try:
+        return int(s)
+    except ValueError:
+        try:
+            return float(s)
+        except ValueError:
+            return s
 
 def map_to_default_header_names(header, additional_mapping_dict={}):
     """
@@ -83,15 +130,39 @@ def map_to_default_header_names(header, additional_mapping_dict={}):
         'Vorbohrwerte':'vorbohrwerte',
         'E Coordinate':'RW',
         'N Coordinate':'HW',
+
+        "Sondeerlengte":"depth",
+        "Conusweerstand qc":"qc",
+        "Wrijvingsweerstand fs":"fs",
+        "Wrijvingsgetal Rf":"Rf",
+        "Waterspanning u2":"u2",
+        "Helling X":"inclination_x",
+        "Helling Y":"inclination_y",
+        "Gecorrigeerde diepte":"depth_corr",
+        "Tijd":"time",
+        "TESTID":"hole_id",
+        "penetration length":"penetration length",
+        "qc":"qc",
+        "fs":"fs",
+        "SampleTime":"SampleTime",
+        "Rf":"Rf"
     }
     # extend the dict by additional and alternative dicts (existing keys will be overwritten!)
     mapping_dict = {**default_mapping_dict, **additional_mapping_dict}
     header_renamed = {}
-    for k in header.keys():
-        try:
-            header_renamed[mapping_dict[k]] = header[k]
-        except KeyError:
-            header_renamed[k] = header[k]
+    if isinstance(header, dict):
+        for k in header.keys():
+            try:
+                header_renamed[mapping_dict[k]] = header[k]
+            except KeyError:
+                header_renamed[k] = header[k]
+
+    elif isinstance(header, list):
+        for k in header:
+            try:
+                header_renamed[mapping_dict[k]] = k
+            except KeyError:
+                header_renamed[k] = k
 
     return(header_renamed)
     
@@ -114,7 +185,7 @@ def read_measurement_headers(lines, skip_lines=0):
         elif(line_cleaned != ''):
             cleaned_values = {}
             for col_i, value in enumerate(line_cleaned.split(' ')):
-                if(value == 'UNDEF'):
+                if(value == 'UNDEF' or value == '-99999.000'):
                     value = None
                 else:
                     try:
@@ -127,6 +198,39 @@ def read_measurement_headers(lines, skip_lines=0):
     # add missing keys in unit dict
     [_header_units.update({h:'[-]'}) for h in _header if _header_units.get(h) == None] # caution: will update the dict inplace!
     return(_header, _header_units, _measurements)
+
+def read_alt_measurements(txt_lines, column_names, skip_lines):
+    _measurements = []
+
+    for line in txt_lines[skip_lines:]:
+        dict_per_row = {}
+        line_cleaned = ' '.join(line.strip().rstrip().split())
+        for col_i, value in enumerate(line_cleaned.split(' ')):
+            if(value == 'UNDEF' or value == '-99999.000'):
+                value = None
+            else:
+                try:
+                    value = float(value.replace(',','.'))
+                except:
+                    value = value
+            dict_per_row[column_names[col_i]] = value
+        _measurements.append(dict_per_row)
+    return(_measurements)
+
+def read_alt_gef_file(file_path : str = None,  file_bytes : bytes = None, header_mapping_dict={}):
+    if(file_path is not None):
+        txt_lines, encoding = read_txt_file(file_path)
+    elif(file_bytes is not None):
+        txt_lines, encoding = read_byte_file(file_bytes)
+
+    # 1) Extract header
+    header_dict, header_lines = extract_alternative_header_part(txt_lines)
+    column_names = [c[2] for c in header_dict.get("COLUMNINFO")]
+    header_units = [c[1] for c in header_dict.get("COLUMNINFO")]
+    renamed_header = map_to_default_header_names(column_names)
+    renamed_cols = [k for k in renamed_header.keys()]
+    measurements = read_alt_measurements(txt_lines=txt_lines, column_names=renamed_cols, skip_lines=header_lines)
+    return(header_dict, header_units, measurements)
 
 def read_gef_file(file_path : str = None,  file_bytes : bytes = None, header_mapping_dict={}):
     """
