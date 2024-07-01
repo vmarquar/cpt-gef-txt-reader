@@ -141,11 +141,11 @@ def map_to_default_header_names(header, additional_mapping_dict={}):
         "Gecorrigeerde diepte":"depth_corr",
         "Tijd":"time",
         "TESTID":"hole_id",
-        "penetration length":"penetration length",
+        "penetration length":"depth",
         "qc":"qc",
         "fs":"fs",
-        "SampleTime":"SampleTime",
-        "Rf":"Rf"
+        "SampleTime":"time",
+        "Rf":"Rf",
     }
     # extend the dict by additional and alternative dicts (existing keys will be overwritten!)
     mapping_dict = {**default_mapping_dict, **additional_mapping_dict}
@@ -230,6 +230,9 @@ def read_alt_gef_file(file_path : str = None,  file_bytes : bytes = None, header
     renamed_header = map_to_default_header_names(column_names)
     renamed_cols = [k for k in renamed_header.keys()]
     measurements = read_alt_measurements(txt_lines=txt_lines, column_names=renamed_cols, skip_lines=header_lines)
+    if("SampleTime" in measurements[0].keys()):
+        print("ok")
+        pass
     return(header_dict, header_units, measurements)
 
 def read_gef_file(file_path : str = None,  file_bytes : bytes = None, header_mapping_dict={}):

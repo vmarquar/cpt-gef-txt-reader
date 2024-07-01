@@ -111,7 +111,7 @@ if __name__ == '__main__':
         import pandas as pd
         header_df = pd.DataFrame.from_dict(all_cpt_header_info)
         measurements_df = pd.DataFrame.from_dict(all_measurements)
-        excel_outpath = './output_data/CPT_Summary.xlsx'
+        excel_outpath = './output_data/Example_5_CPT_Summary.xlsx'
 
         # depending on the ampount of cpt measurement data the excel file can take some time
         with pd.ExcelWriter(excel_outpath) as writer:
@@ -119,5 +119,5 @@ if __name__ == '__main__':
             measurements_df.to_excel(writer, sheet_name="Sheet1_cpt_measurements", index=False)
 
         # optionally export the data into two csv files that can be imported into Leapfrog Works
-        header_df.to_csv('./output_data/collar.csv')
-        measurements_df.to_csv('./output_data/intervals.csv')
+        header_df.to_csv('./output_data/example_5_collar.csv')
+        measurements_df.to_csv('./output_data/example_5_intervals.csv')
