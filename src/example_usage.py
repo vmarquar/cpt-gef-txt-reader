@@ -1,30 +1,36 @@
 from gef_parser import read_gef_file, read_alt_gef_file
 from utils.pytess_main import pytess_triangulate, pytess_voronoi # original code from pytess, see https://github.com/karimbahgat/Pytess
-from dotenv import load_dotenv
 from os import getenv
 from glob import glob
 
+RUN_EXAMPLE1 = True
+RUN_EXAMPLE2 = False
+RUN_EXAMPLE3 = False
+RUN_EXAMPLE4 = False
+RUN_EXAMPLE5 = False
+FILE_PATH = "./data/GEF_SAMPLES/ASCII_qt/20220324-10005_CPTU 1.GEF.txt"
+
 if __name__ == '__main__':
     # Load environment variable (paths, etc.)
-    load_dotenv("./.env")
     
     ############
     # Example 1: Parse a single file
-    if(getenv("RUN_EXAMPLE1") != "FALSE"):
-        file_path = './sample_cptu_file.GEF.txt'
+    if(RUN_EXAMPLE1):
+        file_path = FILE_PATH
         cpt_header, measurement_columns_and_units, measurements = read_gef_file(file_path)
         
         print(measurements)
         print(cpt_header)
         print(measurement_columns_and_units)
+        pass
 
     ############
     # Example 2: Parse a single file and create a pandas dataframe from the measurements
-    if(getenv("RUN_EXAMPLE2") != "FALSE"):
+    if(RUN_EXAMPLE2):
         import pandas as pd
         import matplotlib.pyplot as plt
 
-        file_path = './sample_cptu_file.GEF.txt'
+        file_path = FILE_PATH
         cpt_header, measurement_columns_and_units, measurements = read_gef_file(file_path)
 
         # ## Create a pandas df from it and plot qc vs. depth
@@ -42,7 +48,7 @@ if __name__ == '__main__':
 
     ############
     # Example 3: Read all .gef.txt files in a folder and create a big pandas df of the measurement data
-    if(getenv("RUN_EXAMPLE3") != "FALSE"):
+    if(RUN_EXAMPLE3):
         from glob import glob
         folder_path = './GEF_SAMPLES/**/*.GEF.txt'
         all_measurements = []
@@ -71,7 +77,7 @@ if __name__ == '__main__':
 
     ############
     # Example 4: Create Thiessen Polygons and a Delauny triangulation from CPT xyz-Coordinates
-    if(getenv("RUN_EXAMPLE4") != "FALSE"):
+    if(RUN_EXAMPLE4):
         from glob import glob
         folder_path = getenv("EXAMPLE_4_FOLDER_PATH")
         all_measurements = []
@@ -96,7 +102,7 @@ if __name__ == '__main__':
 
     ############
     # Example 5: Read all .gef files in a folder and create a big pandas df of the measurement data  
-    if(getenv("RUN_EXAMPLE5") != "FALSE"):
+    if(RUN_EXAMPLE5):
         folder_path = getenv("EXAMPLE_5_FOLDER_PATH") #'./GEF_SAMPLES/**/*.gef'
         all_measurements = []
         all_cpt_header_info = []

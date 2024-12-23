@@ -1,0 +1,7 @@
+[project]
+name = "cpt-gef-txt-reader"
+version = "0.1.0"
+description = "This is a small library that simplifies the import of .GEF.txt / ASCII files for geotechnical CPT data."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
