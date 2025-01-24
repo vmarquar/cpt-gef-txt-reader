@@ -1,0 +1,19 @@
+import pytest
+import sys
+sys.path.append('src')
+from gef_reader import read_gef_file
+
+def test_read_gef_file_valid_file():
+    # Assuming 'valid_file.gef' is a valid GEF file in the test directory
+    result = read_gef_file('valid_file.gef')
+    assert result is not None
+    assert isinstance(result, dict)  # Assuming the function returns a dictionary
+
+def test_read_gef_file_invalid_file():
+    with pytest.raises(FileNotFoundError):
+        read_gef_file('non_existent_file.gef')
+
+def test_read_gef_file_invalid_format():
+    # Assuming 'invalid_format.gef' is a file with invalid GEF format
+    with pytest.raises(ValueError):
+        read_gef_file('invalid_format.gef')
