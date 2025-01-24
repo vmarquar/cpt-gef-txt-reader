@@ -4,10 +4,25 @@ Creation date: 07.05.2023
 Last edit: 24.01.2025
 License: MIT
 """
-def read_txt_file(file_path):
-    # 1) check encoding
+from pathlib import Path
+
+def read_txt_file(file_path: str|Path, additional_encoding: None|str = None) -> tuple[list[str], str]:
+    """ This helper functions reads the file content from a .gef.txt file.
+        By default 3 encodings are tried: windows-1252, utf-8, windows-1250
+    
+        Returns:
+            - list of lines
+            - encoding used to read
+    """
+    encodings = ['windows-1252','utf-8', 'windows-1250']
+
+    # add additional encoding to the list, if provided
+    if(additional_encoding):
+        encodings.append(additional_encoding)
+        
+    # try to read the file with the provided encodings
     encoding = None
-    for enc in ['windows-1252','utf-8', 'windows-1250']:
+    for enc in encodings:
         try:    
             with open(file_path, encoding=enc) as f:
                 lines = f.readlines()
