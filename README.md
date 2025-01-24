@@ -6,8 +6,8 @@ The file format .gef.txt is based on the geotechnical exchange format (GEF) defi
 
 
 ## 1) Usage / Installation
-1. Copy the `gef_parser.py` file to your project
-2. Inside your python project import the parser function: `from gef_parser import read_gef_file`
+1. Install the package, e.g. `pip install gef-reader` or when using uv `uv add gef-reader`
+2. Start using the reader by importing `from gef_reader import read_gef_file`
 3. No dependencies or additional installs are needed to parse .gef.txt files
 
 ## 2) File Structure of a .gef.txt file
@@ -45,7 +45,7 @@ Tiefe     qc        fs        u2        I         Rf        ic        Su_min    
 
 ### Example 1: Parse a single file
 ```python
-from gef_parser import read_gef_file
+from gef_reader import read_gef_file
 # Example 1: Parse a single file
 file_path = './sample_cptu_file.GEF.txt'
 cpt_header, measurement_columns_and_units, measurements = read_gef_file(file_path)

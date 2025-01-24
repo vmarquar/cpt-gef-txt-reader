@@ -1,6 +1,6 @@
 [project]
 name = "gef-reader"
-version = "0.1.0"
+version = "0.1.1"
 description = "A simple pure-python implementation to parse .gef.txt files / CPT measurement data in ASCII format."
 readme = "README.md"
 requires-python = ">=3.12"
