@@ -1,9 +1,11 @@
 """
-Author: V. Marquart 
-Creation date: 07.05.2023
+Author: V. Schweigl 
+Creation date: 23.12.2024
 License: MIT
 """
-def read_txt_file(file_path):
+from io import BytesIO
+
+def read_txt_file(file_path:str) -> tuple[list,str]:
     # 1) check encoding
     encoding = None
     for enc in ['windows-1252','utf-8', 'windows-1250']:
@@ -15,7 +17,7 @@ def read_txt_file(file_path):
         except UnicodeDecodeError:
             print(f'got unicode error with {enc} , trying different encoding')
 
-def read_byte_file(io_bytes):
+def read_byte_file(io_bytes: BytesIO) -> tuple[list,str]:
     """This helper functions reads the file content from a ioBytes files, that comes from e.g. a fastapi endpoint.
 
     Args:
@@ -60,7 +62,6 @@ def extract_header_part(lines, header_sep = ':'):
 
 def extract_alternative_header_part(lines):
     data_dict = {}
-       
     for line in lines:
         if line.startswith('#'):
             # Remove the leading '#' and split the line by '='
@@ -217,7 +218,7 @@ def read_alt_measurements(txt_lines, column_names, skip_lines):
         _measurements.append(dict_per_row)
     return(_measurements)
 
-def read_alt_gef_file(file_path : str = None,  file_bytes : bytes = None, header_mapping_dict={}):
+def read_alt_gef_file(file_path : str = None,  file_bytes : bytes = None, header_mapping_dict:dict={}):
     if(file_path is not None):
         txt_lines, encoding = read_txt_file(file_path)
     elif(file_bytes is not None):
@@ -235,7 +236,7 @@ def read_alt_gef_file(file_path : str = None,  file_bytes : bytes = None, header
         pass
     return(header_dict, header_units, measurements)
 
-def read_gef_file(file_path : str = None,  file_bytes : bytes = None, header_mapping_dict={}):
+def read_gef_file(file_path : str = None,  file_bytes : bytes = None, header_mapping_dict: dict = {}):
     """
     This function reads a .gef.txt file, checks encoding and maps it do a default column schema.
     It returns a list of dictionary values for each data row, that can easily imported into pandas/numpy.
@@ -246,7 +247,7 @@ def read_gef_file(file_path : str = None,  file_bytes : bytes = None, header_map
     file_path : str
         path to the .gef.txt file
     header_mapping_dict : dict
-        Dictionary that defines the renamong of the cpt header information
+        Dictionary that defines the renaming of the cpt header information
         Define the dict key as header name read from the header file --> maybe project specific
         Define the dict value as the target value to be mapped to
         e.g. {"X":"RW", "Y": "HW", "Z":"ansatz_hoehe"}
