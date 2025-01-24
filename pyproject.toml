@@ -1,15 +1,22 @@
 [project]
-name = "cpt-gef-txt-reader"
-version = "0.1.0"
-description = "This is a small library that simplifies the import of .GEF.txt / ASCII files for geotechnical CPT data."
+name = "gef-reader"
+version = "0.1.1"
+description = "A simple pure-python implementation to parse .gef.txt files / CPT measurement data in ASCII format."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = []
 
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [dependency-groups]
 dev = [
-    "pytest>=8.3.4",
+    "gef-reader",
 ]
+
+[tool.uv.sources]
+gef-reader = { workspace = true }
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]

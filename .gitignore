@@ -8,3 +8,5 @@ example_data/*
 .vscode
 output_data/*
 *.csv
+.venv
+.pytest_cache
