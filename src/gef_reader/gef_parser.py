@@ -1,6 +1,7 @@
 """
-Author: V. Marquart 
+Author: V. Schweigl 
 Creation date: 07.05.2023
+Last edit: 24.01.2025
 License: MIT
 """
 def read_txt_file(file_path):
@@ -60,7 +61,7 @@ def extract_header_part(lines, header_sep = ':'):
 
 def extract_alternative_header_part(lines):
     data_dict = {}
-       
+    
     for line in lines:
         if line.startswith('#'):
             # Remove the leading '#' and split the line by '='
@@ -96,7 +97,8 @@ def parse_value(value):
     else:
         return convert_to_number(value.strip())
 
-def convert_to_number(s):
+def convert_to_number(s: str) -> int|float|str:
+    """Converts a string to an integer or float if possible, otherwise returns the string itself."""
     try:
         return int(s)
     except ValueError:
@@ -165,7 +167,7 @@ def map_to_default_header_names(header, additional_mapping_dict={}):
                 header_renamed[k] = k
 
     return(header_renamed)
-    
+
 def read_measurement_headers(lines, skip_lines=0):
     _header = None
     _header_line_uncleaned = None

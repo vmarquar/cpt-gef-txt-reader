@@ -1,0 +1,22 @@
+[project]
+name = "gef-reader"
+version = "0.1.0"
+description = "A simple pure-python implementation to parse .gef.txt files / CPT measurement data in ASCII format."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "gef-reader",
+]
+
+[tool.uv.sources]
+gef-reader = { workspace = true }
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]

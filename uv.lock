@@ -1,0 +1,17 @@
+version = 1
+requires-python = ">=3.12"
+
+[[package]]
+name = "gef-reader"
+version = "0.1.0"
+source = { editable = "." }
+
+[package.dev-dependencies]
+dev = [
+    { name = "gef-reader" },
+]
+
+[package.metadata]
+
+[package.metadata.requires-dev]
+dev = [{ name = "gef-reader", editable = "." }]
