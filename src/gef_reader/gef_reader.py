@@ -6,6 +6,7 @@ License: MIT
 """
 from pathlib import Path
 
+
 def read_txt_file(file_path: str|Path, encodings: list[str] = ['windows-1252','utf-8', 'windows-1250']) -> tuple[list[str], str]:
     """ This helper functions reads the file content from a .gef.txt file.
         By default 3 encodings are tried: windows-1252, utf-8, windows-1250
@@ -231,7 +232,7 @@ def read_alt_measurements(txt_lines, column_names, skip_lines):
         _measurements.append(dict_per_row)
     return(_measurements)
 
-def read_alt_gef_file(file_path : str = None,  file_bytes : bytes = None, header_mapping_dict={}):
+def read_alt_gef_file(file_path : None|str = None,  file_bytes : None|bytes = None, header_mapping_dict={}):
     if(file_path is not None):
         txt_lines, encoding = read_txt_file(file_path)
     elif(file_bytes is not None):
