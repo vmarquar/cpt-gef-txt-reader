@@ -6,7 +6,7 @@ License: MIT
 """
 from pathlib import Path
 
-def read_txt_file(file_path: str|Path, additional_encoding: None|str = None) -> tuple[list[str], str]:
+def read_txt_file(file_path: str|Path, encodings: list[str] = ['windows-1252','utf-8', 'windows-1250']) -> tuple[list[str], str]:
     """ This helper functions reads the file content from a .gef.txt file.
         By default 3 encodings are tried: windows-1252, utf-8, windows-1250
     
@@ -14,12 +14,7 @@ def read_txt_file(file_path: str|Path, additional_encoding: None|str = None) -> 
             - list of lines
             - encoding used to read
     """
-    encodings = ['windows-1252','utf-8', 'windows-1250']
-
-    # add additional encoding to the list, if provided
-    if(additional_encoding):
-        encodings.append(additional_encoding)
-        
+    
     # try to read the file with the provided encodings
     encoding = None
     for enc in encodings:
@@ -53,7 +48,7 @@ def read_byte_file(io_bytes):
         except UnicodeDecodeError:
             print(f'got unicode error with {enc} , trying different encoding')
 
-def extract_header_part(lines, header_sep = ':'):
+def extract_header_part(lines: list[str], header_sep: str = ':'):
     header = {}
     for index, line in enumerate(lines):
         if(header_sep in line):
@@ -74,7 +69,7 @@ def extract_header_part(lines, header_sep = ':'):
             break
     return(header)
 
-def extract_alternative_header_part(lines):
+def extract_alternative_header_part(lines: list[str]):
     data_dict = {}
     
     for line in lines:
@@ -105,7 +100,9 @@ def extract_alternative_header_part(lines):
 
     return data_dict, header_lines
 
-def parse_value(value):
+def parse_value(value: str):
+    """ This function parses a string value at a comma (,) if it has any and converts the value to a number.
+    """
     parts = value.split(',')
     if len(parts) > 1:
         return [convert_to_number(part.strip()) for part in parts]
@@ -183,7 +180,7 @@ def map_to_default_header_names(header, additional_mapping_dict={}):
 
     return(header_renamed)
 
-def read_measurement_headers(lines, skip_lines=0):
+def read_measurement_headers(lines: list[str], skip_lines=0):
     _header = None
     _header_line_uncleaned = None
     _header_units = {}
@@ -284,7 +281,7 @@ def read_gef_file(file_path : str = None,  file_bytes : bytes = None, header_map
         txt_lines, encoding = read_txt_file(file_path)
     elif(file_bytes is not None):
         txt_lines, encoding = read_byte_file(file_bytes)
-    cpt_header_data = extract_header_part(txt_lines)
-    cpt_renamed_header = map_to_default_header_names(cpt_header_data, additional_mapping_dict=header_mapping_dict)
+    cpt_header_data = extract_header_part(txt_lines, header_sep=":")
+    cpt_renamed_header = map_to_default_header_names(header=cpt_header_data, additional_mapping_dict=header_mapping_dict)
     column_names, header_units, measurements = read_measurement_headers(txt_lines, skip_lines=len(cpt_renamed_header))
     return(cpt_renamed_header, header_units, measurements)
